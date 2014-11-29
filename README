@@ -1,16 +1,68 @@
 NAME
-    Complete::Zsh - Completion module for the Z shell
+    Complete::Zsh - Completion module for zsh shell
 
 VERSION
-    This document describes version 0.00 of Complete::Zsh (from Perl
-    distribution Complete-Zsh), released on 2014-07-02.
+    This document describes version 0.01 of Complete::Zsh (from Perl
+    distribution Complete-Zsh), released on 2014-11-29.
 
 DESCRIPTION
-    Not yet implemented. Land grab :)
+    This module provides routines related to doing completion in zsh.
 
+FUNCTIONS
+  format_completion($completion) -> array|str
+    Format completion for output (for shell).
+
+    zsh accepts completion reply in the form of one entry per line to
+    STDOUT. Currently the formatting is done using "Complete::Bash"'s
+    "format_completion".
+
+    Arguments ('*' denotes required arguments):
+
+    *   completion* => *array|hash*
+
+        Completion answer structure.
+
+        Either an array or hash, as described in "Complete".
+
+    Return value:
+
+    Formatted string (or array, if `as` key is set to `array`) (any)
+
+  parse_cmdline($cmdline) -> array
+    Parse shell command-line for processing by completion routines.
+
+    This function converts COMP_LINE (str) (which can be supplied by zsh
+    from "read -l") and COMP_POINT (int) (which can be supplied by zsh from
+    "read -ln") into COMP_WORDS (array) and COMP_CWORD (int), like what bash
+    supplies to shell functions. Currently implemented using
+    "Complete::Bash"'s "parse_cmdline".
+
+    Arguments ('*' denotes required arguments):
+
+    *   cmdline => *str*
+
+        Command-line, defaults to COMP_LINE environment.
+
+    Return value:
+
+     (array)
+
+    Return a 2-element array: "[$words, $cword]". $words is array of str,
+    equivalent to "COMP_WORDS" provided by bash to shell functions. $cword
+    is an integer, equivalent to "COMP_CWORD" provided by bash to shell
+    functions. The word to be completed is at "$words->[$cword]".
+
+    Note that COMP_LINE includes the command name. If you want the
+    command-line arguments only (like in @ARGV), you need to strip the first
+    element from $words and reduce $cword by 1.
+
+TODOS
 SEE ALSO
-    As far as I know, at the time of this writing, there's currently no
-    other CPAN modules related to zsh completion.
+    Complete
+
+    Complete::Bash, Complete::Fish, Complete::Tcsh.
+
+    zshcompctl manual page.
 
 HOMEPAGE
     Please visit the project's homepage at
@@ -28,10 +80,10 @@ BUGS
     to an existing test-file that illustrates the bug or desired feature.
 
 AUTHOR
-    Steven Haryanto <stevenharyanto@gmail.com>
+    perlancar <perlancar@cpan.org>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2014 by Steven Haryanto.
+    This software is copyright (c) 2014 by perlancar@cpan.org.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.
